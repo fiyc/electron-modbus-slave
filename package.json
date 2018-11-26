@@ -1,0 +1,28 @@
+{
+  "name": "electron-modbus-slave",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/electron/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiyc/electron-modbus-slave.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fiyc/electron-modbus-slave/issues"
+  },
+  "homepage": "https://github.com/fiyc/electron-modbus-slave#readme",
+  "devDependencies": {
+    "electron": "^3.0.10"
+  },
+  "dependencies": {
+    "node-modbus": "^4.3.1",
+    "stampit": "^2.1.2"
+  }
+}
