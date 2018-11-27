@@ -8,3 +8,12 @@
     margin-right: 10px;
 }
 
+.content-body ul{
+    list-style: none;
+    float: left;
+    margin: 20px;
+}
+
+.content-body ul i{
+    width: 10px;
+}
