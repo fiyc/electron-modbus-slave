@@ -1,24 +1,43 @@
-const { app, BrowserWindow } = require('electron')
+/**
+* @Author: fiyc
+* @Date : 2018-11-27 11:36
+* @FileName : main.js
+* @Description : 
+    - 主线程入口
+*/
+const path = require('path');
+const { app, BrowserWindow } = require('electron');
 
-let run = require('./demos/demo8');
+let win = null;
 
+let createWindow = function () {
+    let options = {
+        width: 1080,
+        height: 840,
+        minWidth: 680,
+        title: "electron modbus slave"
+    };
 
+    win = new BrowserWindow(options);
+    win.loadURL(path.join('file://', __dirname, 'index.html'));
 
-let win;
+    win.on('closed', () => {
+        win = null;
+    });
+}
+
 app.on('ready', () => {
-  win = run();
-})
+    createWindow();
+});
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
 })
 
 app.on('activate', () => {
-  // 在macOS上，当单击dock图标并且没有其他窗口打开时，
-  // 通常在应用程序中重新创建一个窗口。
-  if (win === null) {
-    win = run();
-  }
+    if (win === null) {
+        createWindow()
+    }
 })

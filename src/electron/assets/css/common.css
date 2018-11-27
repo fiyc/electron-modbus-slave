@@ -1,0 +1,22 @@
+/**
+* @Author: fiyc
+* @Date : 2018-11-27 16:50
+* @FileName : common.css
+* @Description : 
+    - 通用样式
+*/
+.w50{
+    width: 50px !important;
+}
+
+.w100{
+    width: 100px !important;
+}
+
+.w150{
+    width: 150px !important;
+}
+
+.w200{
+    width: 200px !important;
+}

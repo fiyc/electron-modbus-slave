@@ -1,0 +1,10 @@
+.content-header span{
+    font-weight: bold;
+    font-size: 40px;
+    margin-right: 20px;
+}
+
+.content-header input{
+    margin-right: 10px;
+}
+
