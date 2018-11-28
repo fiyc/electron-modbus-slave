@@ -21,6 +21,10 @@ let createWindow = function () {
     win = new BrowserWindow(options);
     win.loadURL(path.join('file://', __dirname, 'index.html'));
 
+
+    let eventBind = require('./main-process/main-event-bind');
+    eventBind(win);
+    
     win.on('closed', () => {
         win = null;
     });
@@ -41,5 +45,3 @@ app.on('activate', () => {
         createWindow()
     }
 })
-
-require('./main-process/main-event-bind');

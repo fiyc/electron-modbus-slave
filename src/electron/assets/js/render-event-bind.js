@@ -7,13 +7,11 @@
 */
 
 const {ipcRenderer, remote} = require('electron');
-const BrowserWindow = remote.BrowserWindow;
-const path = require('path');
 let constant = require('../../../common/constants');
+
 let connBtn = document.getElementById('conn-btn');
 let portDom = document.getElementById('port');
 let navTabs = document.querySelectorAll('.nav-tab');
-let contentTypeDom = document.getElementById('content-type-name');
 let contentStart = document.getElementById('content-start');
 let contentLength = document.getElementById('content-length');
 let changeRangeBtn = document.getElementById('change-range-btn');
@@ -70,7 +68,6 @@ navTabs.forEach((item) => {
 });
 
 ipcRenderer.on(constant.events.CHANGE_TAB_REPLY, (event, arg) => {
-    contentTypeDom.innerHTML = arg.name;
     contentStart.value = arg.begin;
     contentLength.value = arg.length;
 });
@@ -95,12 +92,7 @@ changeRangeBtn.addEventListener('click', () => {
 });
 
 
-// 获取当前值轮询
-let requestCurrentValue = function(){
-    ipcRenderer.send(constant.events.CURRENT_VALUE_REQUEST);
-}
-
-ipcRenderer.on(constant.events.CURRENT_VALUE_REPLY, (event, arg) => {
+ipcRenderer.on(constant.events.CURRENT_VALUE_UPDATE, (event, arg) => {
     // alert(arg);
     let blockNum = Math.ceil(arg.list.length / 8);
     let contentBodyStr = "";
@@ -126,15 +118,17 @@ ipcRenderer.on(constant.events.CURRENT_VALUE_REPLY, (event, arg) => {
 
 document.addEventListener('click', function(e){
     if(e.target && e.target.hasAttribute && e.target.hasAttribute("value-field")){
-        // console.log(e);
-        const modulePath = path.join('file://', __dirname, '..', '..', 'views', 'changeValue.html');
-        let win = new BrowserWindow({width: 300, height: 200, frame: false, x: e.screenX, y: e.screenY});
-        win.setMenu(null);
+        let currentWindow = remote.getCurrentWindow();
+        let sizeInfo = currentWindow.getSize();
+        let positionInfo = currentWindow.getPosition();
 
-        win.on('close', () => {win = null})
-        win.on('blur', () => {win.close()});
-        win.loadURL(modulePath);
-        win.show();
+        let currentFieldInfo = {
+            index: e.target.getAttribute('index'),
+            x: positionInfo[0] + Math.floor(sizeInfo[0] / 2),
+            y: positionInfo[1] + Math.floor(sizeInfo[1] / 2),
+            value: e.target.value
+        };
+
+        ipcRenderer.send(constant.events.OPEN_DIALOG, currentFieldInfo);
     }
 })
-setInterval(requestCurrentValue, 1000);
