@@ -49,8 +49,8 @@ let getBuf = function (typeCode) {
  */
 let bitRead = function (buf, bitStart, length) {
     //根据bit的开始位与长度, 计算需要获取到buffer中的byte的开始位与结束位
-    let startByte = parseInt(bitStart / 8);
-    let endByte = parseInt((bitStart + length) / 8);
+    let startByte = Math.floor(bitStart / 8);
+    let endByte = Math.ceil((bitStart + length) / 8);
 
     //计算在buffer中需要移除的头偏移与尾偏移
     let headShift = bitStart;
@@ -58,25 +58,25 @@ let bitRead = function (buf, bitStart, length) {
 
     //获取buffer
     //let byteValue = read(buf, startByte, endByte - startByte + 1);
-    let byteValue = Buffer.from(buf.slice(startByte, endByte + 1));
-
+    let byteValue = Buffer.from(buf.slice(startByte, endByte));
+    let resultBuf = Buffer.alloc(Math.ceil(length / 8));
     //整体向左偏移headShift位
     for (let i = 0; i < byteValue.length; i++) {
         if (i === byteValue.length - 1) {
             let current = byteValue.readUInt8(i);
             current = current << headShift;
-            byteValue.writeUInt8(current, i);
+            resultBuf.writeUInt8(current, i);
         } else {
             let current = byteValue.readUInt8(i);
             let next = byteValue.readUInt8(i + 1);
             current = current << headShift;
             next = next >> (8 - headShift);
             current = (current | next) & 0xff;
-            byteValue.writeUInt8(current, i);
+            resultBuf.writeUInt8(current, i);
         }
     }
 
-    return byteValue;
+    return resultBuf;
 }
 
 /**

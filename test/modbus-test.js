@@ -8,4 +8,4 @@
 
 let core = require('../src/modbus/modbus-core');
 
-core.start(9898);
+core.start(502);

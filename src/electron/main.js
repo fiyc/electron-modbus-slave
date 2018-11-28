@@ -41,3 +41,5 @@ app.on('activate', () => {
         createWindow()
     }
 })
+
+require('./main-process/main-event-bind');

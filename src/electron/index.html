@@ -15,29 +15,29 @@
     <div class="nav">
         <nav>
             <header class="nav-header">
-                <input class="form-control w150" placeholder="输入监听端口号" />
-                <button class="btn btn-success btn-sm">START</button>
+                <input class="form-control w150" id="port" placeholder="输入监听端口号" />
+                <button class="btn btn-success btn-sm" id="conn-btn">START</button>
             </header>
 
             <div class="nav-body">
-                <a href="#" data="1">Coil</a>
-                <a href="#" data="2">DiscreteInput</a>
-                <a href="#" data="3">HoldingRegister</a>
-                <a href="#" data="4">InputRegister</a>
+                <a class="nav-tab tab-select" href="#" data="1">Coil</a>
+                <a class="nav-tab" href="#" data="2">DiscreteInput</a>
+                <a class="nav-tab" href="#" data="3">HoldingRegister</a>
+                <a class="nav-tab" href="#" data="4">InputRegister</a>
             </div>
         </nav>
     </div>
 
     <div class="content">
         <div class="content-header">
-            <span>Coil</span>
-            <label>开始&nbsp;</label> <input type="text" class="form-control w50" value="0" />
-            <label>长度&nbsp;</label> <input type="text" class="form-control w50" value="10" />
-            <button class="btn btn-success btn-sm">确定</button>
+            <span id="content-type-name">Coil</span>
+            <label>开始&nbsp;</label> <input id="content-start" type="text" class="form-control w50" value="0" />
+            <label>长度&nbsp;</label> <input id="content-length" type="text" class="form-control w50" value="10" />
+            <button id="change-range-btn"class="btn btn-success btn-sm">确定</button>
             <hr>
         </div>
 
-        <div class="content-body">
+        <div class="content-body" id="content-body">
             <ul>
                 <li class="input-group">
                     <span class="input-group-addon w50">1</span>
@@ -60,7 +60,7 @@
     </div>
 
     <script>
-
+        require('./assets/js/render-event-bind.js');
     </script>
 </body>
 
