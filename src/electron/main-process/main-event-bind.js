@@ -117,6 +117,10 @@ let instance = function (mainWindow) {
 
         mainWindow.webContents.send(constants.events.CURRENT_VALUE_UPDATE, response);
     }
+
+    mainWindow.webContents.on('did-finish-load', () => {
+        sendCurrentTabValue();
+    });
 }
 
 module.exports = instance;
