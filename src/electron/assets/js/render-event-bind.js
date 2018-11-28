@@ -6,7 +6,9 @@
     - 渲染线程事件绑定
 */
 
-const {ipcRenderer} = require('electron');
+const {ipcRenderer, remote} = require('electron');
+const BrowserWindow = remote.BrowserWindow;
+const path = require('path');
 let constant = require('../../../common/constants');
 let connBtn = document.getElementById('conn-btn');
 let portDom = document.getElementById('port');
@@ -111,7 +113,7 @@ ipcRenderer.on(constant.events.CURRENT_VALUE_REPLY, (event, arg) => {
                 itemValue = arg.list[itemIndex];
             }
 
-            liStr += `<li class="input-group"><span class="input-group-addon w50">${itemIndex + arg.beginIndex}</span><input type="text" class="form-control w80" index=${itemIndex + arg.beginIndex} value=${itemValue}></li>`;
+            liStr += `<li class="input-group"><span class="input-group-addon w50">${itemIndex + arg.beginIndex}</span><input value-field type="text" class="form-control w80" index=${itemIndex + arg.beginIndex} value=${itemValue}></li>`;
         }
 
         let ulStr = `<ul>${liStr}</ul>`;
@@ -119,6 +121,20 @@ ipcRenderer.on(constant.events.CURRENT_VALUE_REPLY, (event, arg) => {
     }
 
     contentBody.innerHTML = contentBodyStr;
+    contentBody.hasAttribute
 });
 
+document.addEventListener('click', function(e){
+    if(e.target && e.target.hasAttribute && e.target.hasAttribute("value-field")){
+        // console.log(e);
+        const modulePath = path.join('file://', __dirname, '..', '..', 'views', 'changeValue.html');
+        let win = new BrowserWindow({width: 300, height: 200, frame: false, x: e.screenX, y: e.screenY});
+        win.setMenu(null);
+
+        win.on('close', () => {win = null})
+        win.on('blur', () => {win.close()});
+        win.loadURL(modulePath);
+        win.show();
+    }
+})
 setInterval(requestCurrentValue, 1000);

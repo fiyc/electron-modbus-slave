@@ -76,6 +76,13 @@ ipcMain.on(constants.events.CURRENT_VALUE_REQUEST, (event, arg) => {
                 response.list.push(bitValue);
             }
         }
+    }else{
+        let index = 0;
+        while(index < readBuf.length - 1){
+            let value = readBuf.readUInt16BE(index);
+            response.list.push(value);
+            index += 2;
+        }
     }
 
     event.sender.send(constants.events.CURRENT_VALUE_REPLY, response); 
