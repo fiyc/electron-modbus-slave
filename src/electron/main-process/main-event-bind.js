@@ -15,6 +15,7 @@ const {
 let modbusCore = require('../../modbus/modbus-core');
 let modbusMemory = require('../../modbus/memory');
 let setting = require('./setting-cache');
+let autoChangeCache = require('./auto-change-cache');
 
 let instance = function (mainWindow) {
     ipcMain.on(constants.events.CONNECT, (event, arg) => {
@@ -79,19 +80,34 @@ let instance = function (mainWindow) {
             dialog.close()
         });
         dialog.webContents.on('did-finish-load', () => {
-            let dialogData = {
-                index: arg.index,
-                value: arg.value,
-                autoChange: false,
-                autoChangePeriod: 1000,
-                autoChangeType: 0,
-                autoAddValue: 1,
-                autoRandomMin: 0,
-                autoRandomMax: 0
-            };
+            let tabCode = setting.currentTabInfo().code;
+            let dialogData = autoChangeCache.get(tabCode, arg.index);
+            dialogData.index = arg.index;
+            dialogData.value = arg.value;
             dialog.webContents.send(constants.events.DIALOG_DATA, dialogData);
         });
         dialog.show();
+    });
+
+    ipcMain.on(constants.events.AUTO_CHANGE_SETTING, (event, arg) => {
+        let tabCode = setting.currentTabInfo().code;
+        autoChangeCache.set(tabCode, arg.index, {
+            autoChange: arg.autoChange,
+            autoChangePeriod: arg.autoChangePeriod,
+            autoChangeType: arg.autoChangeType,
+            autoAddValue: arg.autoAddValue,
+            autoRandomMin: arg.autoRandomMin,
+            autoRandomMax: arg.autoRandomMax
+        });
+
+        // TODO 设置值
+        let value = Number(arg.value);
+        let address = Number(arg.index);
+        if(tabCode === 1){
+            modbusMemory.Write.SingleCoil(address, value);
+        }else if(tabCode === 3){
+            modbusMemory.Write.SingleRegister(address, value);
+        }
     });
 
     let sendCurrentTabValue = function(){
@@ -131,6 +147,8 @@ let instance = function (mainWindow) {
     mainWindow.webContents.on('did-finish-load', () => {
         sendCurrentTabValue();
     });
+
+    setInterval(sendCurrentTabValue, 1000);
 }
 
 module.exports = instance;

@@ -55,8 +55,12 @@ const constants = {
          * 主线程发送, 渲染线程监听
          */
         DIALOG_DATA: "DIALOG_DATA",
-        SET_CHANGE_RULE: "SET_CHANGE_RULE", // 修改自动变化规则
-        SET_VALUE: "SET_VALUE", // 修改值
+
+        /**
+         * 设置字段变化规则事件
+         * 渲染线程发送, 主线程监听
+         */
+        AUTO_CHANGE_SETTING: "AUTO_CHANGE_SETTING",
     },
 
     actionCode: {

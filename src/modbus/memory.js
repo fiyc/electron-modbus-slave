@@ -86,9 +86,8 @@ let bitRead = function (buf, bitStart, length) {
  * @param {bit} bitValue 
  */
 let bitWriteSingle = function (buf, bitStart, bitValue) {
-    var byteStart = parseInt(bitStart / 8);
-    // var shift = 7 - bitStart % 8; //对应的coil顺序为 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
-    var shift = bitStart % 8; //对应的coil顺序为 7 6 5 4 3 2 1 0 15 14 13 12 11 10 9 8
+    var byteStart = Math.floor(bitStart / 8);
+    var shift = 7 - bitStart % 8; //对应的coil顺序为 7 6 5 4 3 2 1 0 15 14 13 12 11 10 9 8
     var originValue = buf.readUInt8(byteStart);
     var finalBuf = originValue ^ ((originValue & (1 << shift)) ^ (bitValue << shift))
     buf.writeUInt8(finalBuf, byteStart);
@@ -151,7 +150,7 @@ let byteRead = function (buf, startByte, length) {
  * @param {int} intValue 
  */
 let byteWriteSingle = function (buf, startByte, intValue) {
-    buf.writeUInt16BE(intValue, startByte);
+    buf.writeUInt16BE(intValue, startByte * 2);
 }
 
 /**

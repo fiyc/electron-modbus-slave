@@ -5,11 +5,12 @@
 * @Description : 
     - 渲染层-弹出框页面事件绑定
 */
-const {ipcRenderer} = require('electron');
+const {ipcRenderer, remote} = require('electron');
 let constant = require('../../../common/constants');
 
 //页面元素
-let fieldIndex = document.getElementById('field-index');
+let fieldIndexShow = document.getElementById('field-index-show');
+let fieldIndex = document.getElementById('field-index-input');
 let valueInput = document.getElementById('set-value-input');
 let confirmBtn = document.getElementById('confirm-btn');
 let autoChangeCheckbox = document.getElementById('auto-change-checkbox');
@@ -44,8 +45,26 @@ autoRandomChange.addEventListener('click', () => {
     autoChangeRandomTR.classList.remove('hidden');
 });
 
+
+confirmBtn.addEventListener('click', () => {
+    let postData = {
+        index: fieldIndex.value,
+        value: valueInput.value,
+        autoChange: autoChangeCheckbox.checked,
+        autoChangePeriod: autoChangePeriod.value,
+        autoChangeType: autoChangeType.value,
+        autoAddValue: autoAddValue.value,
+        autoRandomMin: autoRandomMin.value,
+        autoRandomMax: autoRandomMax.value
+    };
+
+    ipcRenderer.send(constant.events.AUTO_CHANGE_SETTING, postData);
+    remote.getCurrentWindow().close();
+});
+
 ipcRenderer.on(constant.events.DIALOG_DATA, (event, arg) => {
-    fieldIndex.innerHTML = `[${arg.index}]`;
+    fieldIndexShow.innerHTML = `[${arg.index}]`;
+    fieldIndex.value = arg.index;
     valueInput.value = arg.value;
 
     if(arg.autoChange){
@@ -54,7 +73,7 @@ ipcRenderer.on(constant.events.DIALOG_DATA, (event, arg) => {
 
     autoChangePeriod.value = arg.autoChangePeriod;
 
-    if(arg.autoChangeType === 0){
+    if(Number(arg.autoChangeType) === 0){
         autoAddChange.click();
     }else{
         autoRandomChange.click();
