@@ -24,38 +24,88 @@ let autoChangeRandomTR = document.getElementById('auto-change-random-part');
 let autoAddValue = document.getElementById('auto-add-value');
 let autoRandomMin = document.getElementById('auto-random-min');
 let autoRandomMax = document.getElementById('auto-random-max');
+let errorMsg = document.getElementById('error-msg');
 
 autoChangeCheckbox.addEventListener('click', () => {
+    errorMsg.innerHTML = "";
     if(autoChangeCheckbox.checked){
         autoChangePart.classList.remove('hidden');
     }else{
         autoChangePart.classList.add('hidden');
+
+        autoChangePeriod.value = 1000;
+        autoAddValue.value = 1;
+        autoRandomMin.value = 0;
+        autoRandomMax.value = 0;
+        autoAddChange.click();
     }
 });
 
 autoAddChange.addEventListener('click', () => {
     autoChangeType.value = 0;
+    autoRandomMin.value = 0;
+    autoRandomMax.value = 0;
     autoChangeAddTR.classList.remove('hidden');
     autoChangeRandomTR.classList.add('hidden');
+    errorMsg.innerHTML = "";
 });
 
 autoRandomChange.addEventListener('click', () => {
     autoChangeType.value = 1;
+    autoAddValue.value = 1;
     autoChangeAddTR.classList.add('hidden');
     autoChangeRandomTR.classList.remove('hidden');
+    errorMsg.innerHTML = "";
 });
 
 
 confirmBtn.addEventListener('click', () => {
+    errorMsg.innerHTML = "";
+    let value = parseInt(valueInput.value);
+    if(Number.isNaN(value) || value < 0){
+        errorMsg.innerHTML = `无效的值 ${valueInput.value}`;
+        return;
+    }
+
+    let period = parseInt(autoChangePeriod.value);
+    if(Number.isNaN(period) || period < 500){
+        errorMsg.innerHTML = `无效的变化周期 ${autoChangePeriod.value}`;
+        return;
+    }
+
+
+    let addStep = parseInt(autoAddValue.value);
+    if(Number.isNaN(addStep)){
+        errorMsg.innerHTML = `无效的递增值 ${autoAddValue.value}`;
+        return;
+    }
+
+    let randomMin = parseInt(autoRandomMin.value);
+    if(Number.isNaN(randomMin)){
+        errorMsg.innerHTML = `无效的随机最小值`;
+        return;
+    }
+
+    let randomMax = parseInt(autoRandomMax.value);
+    if(Number.isNaN(randomMax)){
+        errorMsg.innerHTML = `无效的随机最大值`;
+        return;
+    }
+
+    if(randomMax < randomMin){
+        errorMsg.innerHTML = `随机最大值小于最小值`;
+        return;
+    }
+
     let postData = {
         index: fieldIndex.value,
-        value: valueInput.value,
+        value: value,
         autoChange: autoChangeCheckbox.checked,
-        autoChangePeriod: autoChangePeriod.value,
+        autoChangePeriod: period,
         autoChangeType: autoChangeType.value,
-        autoAddValue: autoAddValue.value,
-        autoRandomMin: autoRandomMin.value,
-        autoRandomMax: autoRandomMax.value
+        autoAddValue: addStep,
+        autoRandomMin: randomMin,
+        autoRandomMax: randomMax
     };
 
     ipcRenderer.send(constant.events.AUTO_CHANGE_SETTING, postData);
