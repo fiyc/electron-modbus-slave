@@ -5,13 +5,23 @@
 * @Description : 
     - 轮询任务调度模块
 */
+let tasks = {};
 
+let add = function(taskKey, period, fn){
+    remove(taskKey);
+    period = Number(period);
+    fn();
+    tasks[taskKey] = setInterval(fn, period);
+}
+
+let remove = function(taskKey){
+    if(tasks[taskKey]){
+        clearInterval(tasks[taskKey]);
+        delete tasks[taskKey]; 
+    }
+}
 
 module.exports = {
-    add: function(taskKey, period, fn){
-
-    },
-    remove: function(taskKey){
-
-    }
+    add,
+    remove
 };

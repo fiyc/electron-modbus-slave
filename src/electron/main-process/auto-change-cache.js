@@ -24,7 +24,7 @@ let set = function (tabType, index, param) {
         delete cache[key];
     } else {
         cache[key] = param;
-        // TODO 启动变化轮询
+        timer.add(key, param.autoChangePeriod, makeLoopFn(tabType, index, param));
     }
 }
 
@@ -47,14 +47,18 @@ let get = function (tabType, index) {
 
 let makeLoopFn = function(tabType, index, param){
     let fn = function(){
-        let tabType = Number(tabType);
+        tabType = Number(tabType);
         let modbusType = constant.modbusType[tabType.toString()];
         let value = 0;
         if(Number(param.autoChangeType) === 0){
+            let autoAddValue = Number(param.autoAddValue);
             // 累加操作
-            modbusMemory.Read[modbusType]();
-            
-
+            let oldValueBuf = modbusMemory.Read[modbusType](index, 1);
+            if(tabType === 1 || tabType === 2){
+                value = (oldValueBuf[0] & 0x1) + autoAddValue;
+            }else{
+                value = oldValueBuf.readUInt16BE(0) + autoAddValue;
+            }
         }else{
             // 随机操作
             let min = Number(param.autoRandomMin);
@@ -76,6 +80,8 @@ let makeLoopFn = function(tabType, index, param){
 
         modbusMemory.Write[modbusType](index, value);
     }
+
+    return fn;
 }
 
 
