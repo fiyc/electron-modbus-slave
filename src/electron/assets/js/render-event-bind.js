@@ -103,6 +103,8 @@ ipcRenderer.on(constant.events.CURRENT_VALUE_UPDATE, (event, arg) => {
             let itemValue = 0;
             if(itemIndex < arg.list.length){
                 itemValue = arg.list[itemIndex];
+            }else{
+                break;
             }
 
             liStr += `<li class="input-group"><span class="input-group-addon w50">${itemIndex + arg.beginIndex}</span><input value-field type="text" class="form-control w80" index=${itemIndex + arg.beginIndex} value=${itemValue}></li>`;
