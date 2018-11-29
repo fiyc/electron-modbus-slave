@@ -5,7 +5,8 @@
   "main": "src/electron/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "packager": "electron-packager ./ electron-modbus-slave --all --out ./outApp --version 3.0.10 --overwrite --icon=./app/img/icon/icon.ico"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,8 @@
   },
   "homepage": "https://github.com/fiyc/electron-modbus-slave#readme",
   "devDependencies": {
-    "electron": "^3.0.10"
+    "electron": "^3.0.10",
+    "electron-packager": "^12.2.0"
   },
   "dependencies": {
     "node-modbus": "^4.3.1",
