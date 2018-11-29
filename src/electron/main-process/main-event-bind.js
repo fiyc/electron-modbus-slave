@@ -91,6 +91,7 @@ let instance = function (mainWindow) {
 
     ipcMain.on(constants.events.AUTO_CHANGE_SETTING, (event, arg) => {
         let tabCode = setting.currentTabInfo().code;
+        let currentTabMemoryName = setting.currentTabMemoryName();
         autoChangeCache.set(tabCode, arg.index, {
             autoChange: arg.autoChange,
             autoChangePeriod: arg.autoChangePeriod,
@@ -100,17 +101,25 @@ let instance = function (mainWindow) {
             autoRandomMax: arg.autoRandomMax
         });
 
-        // TODO 设置值
         let value = Number(arg.value);
         let address = Number(arg.index);
-        if(tabCode === 1){
-            modbusMemory.Write.SingleCoil(address, value);
-        }else if(tabCode === 3){
-            modbusMemory.Write.SingleRegister(address, value);
+
+        if (value > 65535) {
+            value -= 65535;
         }
+
+        if (value < 0) {
+            value += 65535;
+        }
+
+        if(tabCode === 1 || tabCode === 2){
+            value = value > 0 ? 1 : 0;
+        }
+
+        modbusMemory.Write[currentTabMemoryName](address, value);
     });
 
-    let sendCurrentTabValue = function(){
+    let sendCurrentTabValue = function () {
         let currentTabInfo = setting.currentTabInfo();
         let currentTabMemoryName = setting.currentTabMemoryName();
         let readBuf = modbusMemory.Read[currentTabMemoryName](currentTabInfo.begin, currentTabInfo.length);

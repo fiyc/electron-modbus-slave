@@ -47,7 +47,7 @@ let getBuf = function (typeCode) {
  * @param {int} bitStart 
  * @param {int} length 
  */
-let bitRead = function (buf, bitStart, length) {
+let bitReadBK = function (buf, bitStart, length) {
     //根据bit的开始位与长度, 计算需要获取到buffer中的byte的开始位与结束位
     let startByte = Math.floor(bitStart / 8);
     let endByte = Math.ceil((bitStart + length) / 8);
@@ -76,7 +76,53 @@ let bitRead = function (buf, bitStart, length) {
         }
     }
 
+    let index = 0;
+    for(let byteValue of resultBuf.values()){
+        byteValue=((byteValue&0xf0)>>4) | ((byteValue&0x0f)<<4); 
+        byteValue=((byteValue&0xCC)>>2) | ((byteValue&0x33)<<2); 
+        byteValue=((byteValue&0xAA)>>1) | ((byteValue&0x55)<<1); 
+        resultBuf.writeUInt8(byteValue, index);
+        index++;
+    }
+
     return resultBuf;
+}
+
+let bitRead = function(buf, bitStart, length){
+    length = Math.ceil(length / 8) * 8;
+    let readStart = Math.floor(bitStart / 8);
+    let readEnd = Math.ceil((bitStart + length) / 8);
+
+    let readBuf = Buffer.from(buf.slice(readStart, readEnd));
+    let resultBuf = Buffer.alloc(Math.ceil(length / 8));
+
+    if(resultBuf.length === readBuf.length){
+        resultBuf = readBuf;
+    }else{
+        let shift = bitStart % 8;
+        for(let i=0; i<resultBuf.length; i++){
+            let current = readBuf.readUInt8(i);
+            let next = readBuf.readUInt8(i + 1);
+            current = current << shift;
+            next = next >> (8 - shift);
+
+            current = (current | next) & 0xff;
+            resultBuf.writeUInt8(current, i);
+        }
+    }
+
+    let index = 0;
+    for(let byteValue of resultBuf.values()){
+        byteValue=((byteValue&0xf0)>>4) | ((byteValue&0x0f)<<4); 
+        byteValue=((byteValue&0xCC)>>2) | ((byteValue&0x33)<<2); 
+        byteValue=((byteValue&0xAA)>>1) | ((byteValue&0x55)<<1); 
+        resultBuf.writeUInt8(byteValue, index);
+        index++;
+    }
+
+    return resultBuf;
+
+
 }
 
 /**
@@ -87,7 +133,7 @@ let bitRead = function (buf, bitStart, length) {
  */
 let bitWriteSingle = function (buf, bitStart, bitValue) {
     var byteStart = Math.floor(bitStart / 8);
-    var shift = bitStart % 8; //对应的coil顺序为 7 6 5 4 3 2 1 0 15 14 13 12 11 10 9 8
+    var shift = 7 - bitStart % 8; //对应的coil顺序为 7 6 5 4 3 2 1 0 15 14 13 12 11 10 9 8
     var originValue = buf.readUInt8(byteStart);
     var finalBuf = originValue ^ ((originValue & (1 << shift)) ^ (bitValue << shift))
     buf.writeUInt8(finalBuf, byteStart);
@@ -199,13 +245,22 @@ let MemoryHander = {
         }
     },
     Write: {
-        SingleRegister: function (byteAddress, value) {
+        HoldingRegister: function (byteAddress, value) {
             let targetBuf = getBuf(3);
             byteWriteSingle(targetBuf, byteAddress, value);
         },
 
-        SingleCoil: function (bitAddress, value) {
+        Coil: function (bitAddress, value) {
             let targetBuf = getBuf(1);
+            bitWriteSingle(targetBuf, bitAddress, value);
+        },
+        InputRegister: function (byteAddress, value) {
+            let targetBuf = getBuf(4);
+            byteWriteSingle(targetBuf, byteAddress, value);
+        },
+
+        Input: function (bitAddress, value) {
+            let targetBuf = getBuf(2);
             bitWriteSingle(targetBuf, bitAddress, value);
         }
 

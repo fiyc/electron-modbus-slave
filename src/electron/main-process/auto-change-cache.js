@@ -6,6 +6,9 @@
     - 字段变换规则缓存模块
 */
 let timer = require('../../common/timer');
+let modbusMemory = require('../../modbus/memory');
+let constant = require('../../common/constants');
+
 
 let cache = {};
 
@@ -38,6 +41,40 @@ let get = function (tabType, index) {
         };
     }else{
         return JSON.parse(JSON.stringify(cache[key]));
+    }
+}
+
+
+let makeLoopFn = function(tabType, index, param){
+    let fn = function(){
+        let tabType = Number(tabType);
+        let modbusType = constant.modbusType[tabType.toString()];
+        let value = 0;
+        if(Number(param.autoChangeType) === 0){
+            // 累加操作
+            modbusMemory.Read[modbusType]();
+            
+
+        }else{
+            // 随机操作
+            let min = Number(param.autoRandomMin);
+            let max = Number(param.autoRandomMax);
+            value = Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        if(value > 65535){
+            value -= 65535;
+        }
+
+        if(value < 0){
+            value += 65535;
+        }
+
+        if(tabType === 1 || tabType === 2){
+            value = value % 2;
+        }
+
+        modbusMemory.Write[modbusType](index, value);
     }
 }
 

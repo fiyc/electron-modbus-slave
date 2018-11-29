@@ -66,6 +66,13 @@ const constants = {
     actionCode: {
         START: "START",
         STOP: "STOP"
+    },
+
+    modbusType: {
+        "1": "Coil",
+        "2": "Input",
+        "3": "HoldingRegister",
+        "4": "InputRegister"
     }
 
 };
