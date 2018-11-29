@@ -79,7 +79,17 @@ let instance = function (mainWindow) {
             dialog.close()
         });
         dialog.webContents.on('did-finish-load', () => {
-            dialog.webContents.send(constants.events.DIALOG_DATA, arg);
+            let dialogData = {
+                index: arg.index,
+                value: arg.value,
+                autoChange: false,
+                autoChangePeriod: 1000,
+                autoChangeType: 0,
+                autoAddValue: 1,
+                autoRandomMin: 0,
+                autoRandomMax: 0
+            };
+            dialog.webContents.send(constants.events.DIALOG_DATA, dialogData);
         });
         dialog.show();
     });

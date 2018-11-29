@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
@@ -10,7 +11,44 @@
 
 <body>
     <div class="dialog">
-        <span id="testspan"></span>
+        <div class="dialog-top">
+            <span id="field-index">1</span>
+            <input type="text" class="form-control w80" id="set-value-input"/>
+            <button class="btn btn-info" id="confirm-btn">确定</button>
+            <span class="auto-change-check-part">
+                <label>自动变化</label>
+                <input type="checkbox" id="auto-change-checkbox"/>
+            </span>
+        </div>
+
+        <div class="auto-change-part hidden" id="auto-change-part">
+            <table>
+                <tr>
+                    <td label>周期</td>
+                    <td body><input type="text" class="form-control w150" placeholder="变化周期(ms)" id="auto-change-period"/></td>
+                </tr>
+                <tr>
+                    <td label>类型</td>
+                    <td body>
+                        累加&nbsp;<input type="radio" name="auto-change-typ" id="auto-change-add" value="0"/>
+                        随机变化&nbsp;<input type="radio" name="auto-change-typ" id="auto-change-random" value="1"/>
+                        <input type="text" id="auto-change-type" value="0" hidden/>
+                    </td>
+                </tr>
+                <tr id="auto-change-add-part" class="hidden">
+                    <td label>累加值</td>
+                    <td body><input type="text" class="form-control w80" id="auto-add-value" placeholder="累加值"/></td>
+                </tr>
+                <tr id="auto-change-random-part" class="hidden">
+                    <td label>区间</td>
+                    <td body>
+                        <input type="text" class="form-control w80" id="auto-random-min" placeholder="最小值"/>&nbsp;-&nbsp;
+                        <input type="text" class="form-control w80" id="auto-random-max" placeholder="最大值"/>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
 
     </div>
 

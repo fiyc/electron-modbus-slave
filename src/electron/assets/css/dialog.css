@@ -5,3 +5,39 @@
     height: 100%;
     border: 1px solid #ccc;
 }
+
+.dialog .dialog-top{
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background-color: #ccc;
+    padding: 5px 10px;
+}
+
+.dialog .dialog-top .auto-change-check-part{
+    float: right;
+}
+
+.dialog .dialog-top .auto-change-check-part label{
+    color: rgb(122, 115, 115);
+    font-size: 15px;
+}
+
+.dialog .auto-change-part{
+    position: relative;
+    width: 100%;
+}
+
+.dialog .auto-change-part td{
+    padding: 5px 0px;
+}
+
+.dialog .auto-change-part td[label]{
+    width: 50px;
+    text-align: right;
+}
+
+.dialog .auto-change-part td[body]{
+    text-align: left;
+    padding-left: 10px;
+}
