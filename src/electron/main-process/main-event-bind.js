@@ -126,8 +126,7 @@ let instance = function (mainWindow) {
             let binaryTemp = "00000000";
             for (let byteValue of readBuf.values()) {
                 let binaryStr = binaryTemp + byteValue.toString(2);
-                binaryStr = binaryStr.slice(-8);
-
+                binaryStr = binaryStr.slice(-8).split('').reverse().join('');
                 for (let bitValue of binaryStr) {
                     response.list.push(bitValue);
                 }
