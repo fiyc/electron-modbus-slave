@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "packager": "electron-packager ./ electron-modbus-slave --all --out ./outApp --version 3.0.10 --overwrite --icon=./app/img/icon/icon.ico"
+    "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=out",
+    "package:win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --out=out" ,
+    "package:linux": "electron-packager . --overwrite --platform=linux --arch=x64 --out=out"
   },
   "repository": {
     "type": "git",

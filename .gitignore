@@ -5,3 +5,4 @@ public/
 logs/*
 *.log
 package-lock.json
+out/
