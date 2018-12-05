@@ -7,8 +7,8 @@
 */
 
 let config = require('../config');
-const coilByteLength = Math.ceil((Number(config.COIL_MAX_LENGTH) || 2048) / 8);
-const inputByteLength = Math.ceil((Number(config.INPUT_MAX_LENGTH) || 2048) / 8);
+const coilByteLength = Math.ceil((Number(config.COIL_MAX_LENGTH) || 2048) / 8) + 1;
+const inputByteLength = Math.ceil((Number(config.INPUT_MAX_LENGTH) || 2048) / 8) + 1;
 const holdingRegisterByteLength = Math.ceil((Number(config.HOLDING_REGISTER_MAX_LENGTH) || 128) * 2);
 const inputRegisterByteLength = Math.ceil((Number(config.INPUT_REGISTER_MAX_LENGTH) || 128) * 2);
 

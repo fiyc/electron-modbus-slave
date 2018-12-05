@@ -142,3 +142,5 @@ document.addEventListener('click', function(e){
         ipcRenderer.send(constant.events.OPEN_DIALOG, currentFieldInfo);
     }
 })
+
+document.getElementById('coil-tab').click();
