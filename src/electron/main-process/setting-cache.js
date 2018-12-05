@@ -6,6 +6,7 @@
     - 界面设置缓存模块
 */
 
+let config = require('../../config');
 let currentTabCode = 1;
 
 let tabRange = {
@@ -13,25 +14,29 @@ let tabRange = {
         code: 1,
         name: "Coil",
         begin: 0,
-        length: 10
+        length: 10,
+        max: config.COIL_MAX_LENGTH
     },
     "2":{
         code: 2,
         name: "DiscreteInput",
         begin: 0,
-        length: 10
+        length: 10,
+        max: config.INPUT_MAX_LENGTH
     },
     "3":{
         code: 3,
         name: "HoldingRegister",
         begin: 0,
-        length: 10
+        length: 10,
+        max: config.HOLDING_REGISTER_MAX_LENGTH
     },
     "4":{
         code: 4,
         name: "InputRegister",
         begin: 0,
-        length: 10
+        length: 10,
+        max: config.INPUT_REGISTER_MAX_LENGTH
     },
 };
 

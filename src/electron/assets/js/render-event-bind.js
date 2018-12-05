@@ -17,6 +17,8 @@ let contentLength = document.getElementById('content-length');
 let changeRangeBtn = document.getElementById('change-range-btn');
 let contentBody = document.getElementById('content-body');
 
+let currentTabMaxLength = 0;
+
 // 连接按钮事件绑定
 connBtn.addEventListener('click', () => {
     let actionCode = connBtn.actionCode || constant.actionCode.START;
@@ -70,6 +72,7 @@ navTabs.forEach((item) => {
 ipcRenderer.on(constant.events.CHANGE_TAB_REPLY, (event, arg) => {
     contentStart.value = arg.begin;
     contentLength.value = arg.length;
+    currentTabMaxLength = arg.max;
 });
 
 // 修改数据区间事件绑定
@@ -82,6 +85,11 @@ changeRangeBtn.addEventListener('click', () => {
     let length = Number(contentLength.value);
     if(Number.isNaN(length) || length <= 0){
         alert(`无效的数据长度: ${contentLength.value}`);
+        return;
+    }
+
+    if(start + length > currentTabMaxLength){
+        alert(`当前模拟寄存器最大长度为 ${currentTabMaxLength}`);
         return;
     }
 

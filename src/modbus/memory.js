@@ -6,11 +6,17 @@
     - modbus 数据存储模块
 */
 
+let config = require('../config');
+const coilByteLength = Math.ceil((Number(config.COIL_MAX_LENGTH) || 2048) / 8);
+const inputByteLength = Math.ceil((Number(config.INPUT_MAX_LENGTH) || 2048) / 8);
+const holdingRegisterByteLength = Math.ceil((Number(config.HOLDING_REGISTER_MAX_LENGTH) || 128) * 2);
+const inputRegisterByteLength = Math.ceil((Number(config.INPUT_REGISTER_MAX_LENGTH) || 128) * 2);
+
 let memeryPool = {
-    Coil: Buffer.alloc(256),
-    Input: Buffer.alloc(256),
-    HoldingRegister: Buffer.alloc(256),
-    InputRegister: Buffer.alloc(256),
+    Coil: Buffer.alloc(coilByteLength),
+    Input: Buffer.alloc(inputByteLength),
+    HoldingRegister: Buffer.alloc(holdingRegisterByteLength),
+    InputRegister: Buffer.alloc(inputRegisterByteLength),
 };
 
 const unit = {
