@@ -53,7 +53,7 @@ let customServer = function(port){
                 });
 
                 this.on('postWriteSingleRegisterRequest', function(adr, value){
-                    memory.Write.SingleRegister(adr, value);
+                    memory.Write.HoldingRegister(adr, value);
                 });
 
 
