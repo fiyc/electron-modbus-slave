@@ -53,12 +53,14 @@ let customServer = function(port){
                 });
 
                 this.on('postWriteSingleRegisterRequest', function(adr, value){
-                    memory.Write.HoldingRegister(adr, value);
+                    console.log(`postWriteSingleRegisterRequest: ${adr}, ${value}`);
+                    memory.Write.HoldingRegister(adr/2, value);
                 });
 
 
                 this.on('postWriteSingleCoilRequest', function(adr, value){
-                    memory.Write.SingleCoil(adr, value);
+                    console.log(`postWriteSingleCoilRequest: ${adr}, ${value}`);
+                    memory.Write.Coil(adr, value);
                 });
 
             }.bind(this);
